@@ -1,1 +1,37 @@
+Base de Données :
 
+create database ExamenPhp;
+use ExamenPhp;
+
+create table monstre(
+    -> Id int primary key auto_increment,
+    -> Nom varchar(100),
+    -> Pv int(11),
+    -> PA int(11),
+    -> exp_donne int(11))
+    -> ENGINE InnoDB;
+
+alter table monstre add PD int(11);
+
+create table personnage(
+    -> Id int primary key auto_increment,
+    -> Nom varchar(100),
+    -> PV int(11),
+    -> PA int(11),
+    -> PD int(11),
+    -> exp_donne int(11),
+    -> niveau int(11))
+    -> ENGINE InnoDB;
+
+create table salle(
+    -> Id int primary key auto_increment,
+    -> epreuve varchar(100),
+    -> recompense varchar(100))
+    -> ENGINE InnoDB;
+
+insert into personnage values (1,"Star",20,5,10,2,1);
+insert into personnage values (2,"Gold",40,8,12,6,1);
+insert into salle values (1, "enigme","épée");
+insert into salle values (2, "combat","pieces");
+insert into monstre values (1,"monstre", 20,5,10,6);
+insert into monstre values (2,"monstre2", 40,10,20,2);
