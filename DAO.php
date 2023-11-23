@@ -51,18 +51,18 @@ class DAO{
         }
     }
 
-    public function ajouterMonstre(Monstre $monstre) {
-        //Ajout du monstre dans la base de données
-        try {
-            $requete = $this->bdd->prepare("INSERT INTO monstre (Nom, Pv, PA, PD, exp_done) VALUES (?, ?, ?, ?, ?)");
-            $requete->execute([$monstre->getNom(), $monstre->getPV(), $monstre->getPa(), , $monstre->getPd(), , $monstre->getExpDonne()]);
-            return true;
-        } catch (PDOException $e) {
-            echo "Erreur d'ajout de monstre: " . $e->getMessage();
-            return false;
-        }
+    // public function ajouterMonstre(Monstre $monstre) {
+    //     //Ajout du monstre dans la base de données
+    //     try {
+    //         $requete = $this->bdd->prepare("INSERT INTO monstre (Nom, Pv, PA, PD, exp_done) VALUES (?, ?, ?, ?, ?)");
+    //         $requete->execute([$monstre->getNom(), $monstre->getPV(), $monstre->getPa(), , $monstre->getPd(), , $monstre->getExpDonne()]);
+    //         return true;
+    //     } catch (PDOException $e) {
+    //         echo "Erreur d'ajout de monstre: " . $e->getMessage();
+    //         return false;
+    //     }
 
-    }
+    // }
     public function trouverMonstreParId($id) {
         try {
             //Recherche un monstre en particulier en fonction de l'id
@@ -136,25 +136,25 @@ class DAO{
             $info=$requete->fetch();
             echo "Mon perso : \n";
             //affichage des informations
-            echo ("Nom : ".$info ["nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n"."Expérience donne : ".$info["exp_donne"]."\n"."Niveau : ".$info["niveau"]."\n");
+            echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n"."Expérience donne : ".$info["exp_donne"]."\n"."Niveau : ".$info["niveau"]."\n");
             return true;
         }catch (PDOException $e) {
             echo "Erreur d'affichage monPerso: " . $e->getMessage();
             return false;
         }
     }
-    public function ajouterArme(Arme $arme) {
-        //Ajout du arme dans la base de données
-        try {
-            $requete = $this->bdd->prepare("INSERT INTO arme (Nom, Niveau_requis, Pv, PA, PD) VALUES (?, ?, ?, ?, ?)");
-            $requete->execute([$arme->getNom(), $arme->getNiveauRequis(), $arme->getPV(), $arme->getPa(), , $arme->getPd()]);
-            return true;
-        } catch (PDOException $e) {
-            echo "Erreur d'ajout de arme: " . $e->getMessage();
-            return false;
-        }
+    // public function ajouterArme(Arme $arme) {
+    //     //Ajout du arme dans la base de données
+    //     try {
+    //         $requete = $this->bdd->prepare("INSERT INTO arme (Nom, Niveau_requis, Pv, PA, PD) VALUES (?, ?, ?, ?, ?)");
+    //         $requete->execute([$arme->getNom(), $arme->getNiveauRequis(), $arme->getPV(), $arme->getPa(), , $arme->getPd()]);
+    //         return true;
+    //     } catch (PDOException $e) {
+    //         echo "Erreur d'ajout de arme: " . $e->getMessage();
+    //         return false;
+    //     }
 
-    }
+    // }
 
     public function listerArme() {
         //Liste des armes en selectionnant toute la table

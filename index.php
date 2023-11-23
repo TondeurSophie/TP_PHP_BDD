@@ -31,13 +31,18 @@ switch ($choix){
             foreach($personnages as $e){
                 echo "Id : ".$e['Id']."\n";
                 echo 'Nom : '.$e['Nom']."\n";
-                echo 'PV : '.$e['PV']."\n";
+                echo 'Points de Vie : '.$e['PV']."\n";
+                echo 'Points Attaque : '.$e['PA']."\n";
+                echo 'Points de Défence : '.$e['PD']."\n";
+                echo 'Expérience donne : '.$e['exp_donne']."\n";
+                echo 'Niveau : '.$e['niveau']."\n";
                 echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
             }
         }
 
         break;
     case"2":
+        popen('cls','w');
         echo "Liste des personnages : \n";
         $personnages = $DAO->listerPersonnage();
         // print_r($personnages);
@@ -45,15 +50,36 @@ switch ($choix){
             foreach($personnages as $e){
                 echo "Id : ".$e['Id']."\n";
                 echo 'Nom : '.$e['Nom']."\n";
-                echo 'PV : '.$e['PV']."\n";
+                echo 'Points de Vie : '.$e['PV']."\n";
+                echo 'Points Attaque : '.$e['PA']."\n";
+                echo 'Points de Défence : '.$e['PD']."\n";
+                echo 'Expérience donne : '.$e['exp_donne']."\n";
+                echo 'Niveau : '.$e['niveau']."\n";
                 echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
             }
         }
         break;
 
     case"3":
-
+        popen('cls','w');
+        echo "Liste des personnages : \n";
+        $personnages = $DAO->listerPersonnage();
+        if ($personnages){
+            foreach($personnages as $e){
+                echo "Id : ".$e['Id']."\n";
+                echo 'Nom : '.$e['Nom']."\n";
+                echo 'Points de Vie : '.$e['PV']."\n";
+                echo 'Points Attaque : '.$e['PA']."\n";
+                echo 'Points de Défence : '.$e['PD']."\n";
+                echo 'Expérience donne : '.$e['exp_donne']."\n";
+                echo 'Niveau : '.$e['niveau']."\n";
+                echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
+            }
+        }
+        $id= readline("Choisissez votre personnage en fonction de l'id :");
+        $personnages = $DAO ->monPerso($personnages,$id);
         break;
+
     case"4":
         echo "Au revoir ! ";
         break;
