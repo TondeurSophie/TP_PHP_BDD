@@ -29,6 +29,15 @@ create table salle(
     -> recompense varchar(100))
     -> ENGINE InnoDB;
 
+create table arme(
+    -> Id int primary key auto_increment,
+    -> Nom varchar(100),
+    -> Niveau_requis int(11),
+    -> Pv int(11),
+    -> Pa int(11),
+    -> Pd int(11))
+    -> ENGINE InnoDB;
+
 insert into personnage values (1,"Star",20,5,10,2,1);
 insert into personnage values (2,"Gold",40,8,12,6,1);
 insert into salle values (1, "enigme","épée");
