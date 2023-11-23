@@ -9,7 +9,7 @@ class DAO{
     public function ajouterPersonnage(Personnages $personnages) {
         try {
             //Requête SQL permettant d'insérer un personnage dans la BDD avec ses attributs (nom, PV,PA,PD,exp_donne,niveau)
-            $requete = $this->bdd->prepare("INSERT INTO personnage (nom, PV,PA,PD,exp_donne,niveau) VALUES (?,?,?,?,?,?)");
+            $requete = $this->bdd->prepare("INSERT INTO personnage (nom, PV,PA,PD,exp,niveau) VALUES (?,?,?,?,?,?)");
             // création du personnage avec les valeurs de l'objet Utilisateur
             $requete->execute([$personnages->getNom(), $personnages->getPV(),$personnages->getPA(),$personnages->getPD(),$personnages->getexp(),$personnages->getNiveau()]);
             return true; //si tout fonctionne, on revoie true
@@ -19,6 +19,25 @@ class DAO{
             //message d'erreur
             echo "Erreur d'ajout du personnage : " . $e->getMessage();
             //on retourne false
+            return false;
+        }
+    }
+
+    public function supprimerPersonnage(Personnages $personnage) {
+        try {
+            // Préparation de la requête d'insertion
+            $requete = $this->bdd->prepare("DELETE FROM personnage WHERE Id = ?");
+            
+            // Exécution de la requête avec les valeurs de l'objet personnage
+            $requete->execute([$personnage->getId()]);
+            
+            // Retourne vrai en cas de succès
+            return true;
+        } catch (PDOException $e) {
+            // En cas d'erreur, affiche un message d'erreur
+            echo "Erreur d'ajout d'personnage: " . $e->getMessage();
+            
+            // Retourne faux en cas d'échec
             return false;
         }
     }
@@ -50,7 +69,7 @@ class DAO{
         //Ajout du arme dans la base de données
         try {
             $requete = $this->bdd->prepare("INSERT INTO arme (Nom, Niveau_requis, Pv, PA, PD) VALUES (?, ?, ?, ?, ?)");
-            $requete->execute([$arme->getNom(), $arme->getNiveauRequis(), $arme->getPV(), $arme->getPa(), , $arme->getPd()]);
+            $requete->execute([$arme->getNom(), $arme->getNiveauRequis(), $arme->getPV(), $arme->getPa(), $arme->getPd()]);
             return true;
         } catch (PDOException $e) {
             echo "Erreur d'ajout de arme: " . $e->getMessage();
@@ -87,7 +106,7 @@ class DAO{
         //Ajout du monstre dans la base de données
         try {
             $requete = $this->bdd->prepare("INSERT INTO monstre (Nom, Pv, PA, PD, exp_done) VALUES (?, ?, ?, ?, ?)");
-            $requete->execute([$monstre->getNom(), $monstre->getPV(), $monstre->getPa(), , $monstre->getPd(), , $monstre->getExpDonne()]);
+            $requete->execute([$monstre->getNom(), $monstre->getPV(), $monstre->getPa(),$monstre->getPd(), $monstre->getExpDonne()]);
             return true;
         } catch (PDOException $e) {
             echo "Erreur d'ajout de monstre: " . $e->getMessage();
@@ -159,25 +178,20 @@ class DAO{
         }
     }
 
-    public function mettreAJourPersonnage($idPersonnage, $idNiveau) {
+    public function monterNiveauPersonnage($idPersonnage) {
         try {
             //Récupération des informations sur le personnage en fonction de l'id
-            $requetePersonnage = $this->bdd->prepare("SELECT * FROM personnages WHERE id = ?");
+            $requetePersonnage = $this->bdd->prepare("SELECT * FROM personnage WHERE Id = ?");
             $requetePersonnage->execute([$idPersonnage]);
             $resultatPersonnage = $requetePersonnage->fetch(PDO::FETCH_ASSOC);
 
-            //Récupération des informations sur le niveau en fonction de l'id
-            $requeteNiveau = $this->bdd->prepare("SELECT * FROM niveaux WHERE id = ?");
-            $requeteNiveau->execute([$idNiveau]);
-            $resultatNiveau = $requeteNiveau->fetch(PDO::FETCH_ASSOC);
-
             //Mise à jour du nombre d'étoiles collectées et du niveau du personnage
-            $nouveauNombreEtoiles = $resultatPersonnage['nombre_etoile_collecte'] + $resultatNiveau['nombre_dispo_etoile'];
-            $nouveauNiveau = $resultatNiveau['numero'];
+            $nouveauNiveau = $resultatPersonnage['niveau'] + 1;
+            // $nouveauNiveau = $resultatNiveau['numero'];
 
             //Mise à jour dans la base de données
-            $requeteMiseAJour = $this->bdd->prepare("UPDATE personnages SET niv_actuel = ?, nombre_etoile_collecte = ? WHERE id = ?");
-            $requeteMiseAJour->execute([$nouveauNiveau, $nouveauNombreEtoiles, $idPersonnage]);
+            $requeteMiseAJour = $this->bdd->prepare("UPDATE personnage SET niveau = ? WHERE Id = ?");
+            $requeteMiseAJour->execute([$nouveauNiveau, $idPersonnage]);
 
             echo "Personnage mis à jour avec succès !\n";
             return true;

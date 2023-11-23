@@ -14,7 +14,8 @@ switch ($choix){
         $PA=readline("Entrer le PA : ");
         $PD=readline("Entrer le PD : ");
         $exp=readline("Entrer le exp : ");
-        $Perso = new Personnages("",$nom,$PV,$PA,$PD,$exp,1);
+
+        $Perso = new Personnages($nom,$PV,$PA,$PD,$exp,1);
         $DAO->ajouterPersonnage($Perso);
         echo "Le personnage a bien été ajouté. \n";
         echo "Liste des personnages : \n";

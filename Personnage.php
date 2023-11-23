@@ -12,8 +12,7 @@ class Personnages{
     private $niveau;
 
     //Initialisation des propriétés d'un objet à l'aide du constructor
-    public function __construct($id,$nom,$PV,$PA,$PD,$exp,$niveau){
-        $this->id=$id;
+    public function __construct($nom,$PV,$PA,$PD,$exp,$niveau){
         $this->nom=$nom;
         $this->PV=$PV;
         $this->PA=$PA;
@@ -82,6 +81,7 @@ class Salle{
     public function getId() {
         return $this->id;
     }
+    
 }
 
 
