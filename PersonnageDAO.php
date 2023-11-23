@@ -23,6 +23,9 @@ class DAO{
         }
     }
 
+    //Infliger des dégats
+
+
     public function supprimerPersonnage(Personnages $personnage) {
         try {
             // Préparation de la requête d'insertion
@@ -105,8 +108,8 @@ class DAO{
     public function ajouterMonstre(Monstre $monstre) {
         //Ajout du monstre dans la base de données
         try {
-            $requete = $this->bdd->prepare("INSERT INTO monstre (Nom, Pv, PA, PD, exp_done) VALUES (?, ?, ?, ?, ?)");
-            $requete->execute([$monstre->getNom(), $monstre->getPV(), $monstre->getPa(),$monstre->getPd(), $monstre->getExpDonne()]);
+            $requete = $this->bdd->prepare("INSERT INTO monstre (Nom, Pv, PA, PD, exp_done, PV_initial) VALUES (?, ?, ?, ?, ?)");
+            $requete->execute([$monstre->getNom(), $monstre->getPV(), $monstre->getPa(),$monstre->getPd(), $monstre->getExpDonne(),$monstre->getPVInitial()]);
             return true;
         } catch (PDOException $e) {
             echo "Erreur d'ajout de monstre: " . $e->getMessage();
@@ -114,6 +117,26 @@ class DAO{
         }
 
     }
+
+    public function ressuciterMonstre(Monstre $monstre,$id) {
+        try {
+            // Préparation de la requête de mise à jour
+            $requete = $this->bdd->prepare("UPDATE monstre SET Pv = PV_initial WHERE Id = ?");
+            
+            // Exécution de la requête avec la valeur de l'Id de votre monstre
+            $requete->execute([$id]);
+            
+            // Retourne vrai en cas de succès
+            return true;
+        } catch (PDOException $e) {
+            // En cas d'erreur, affiche un message d'erreur
+            echo "Erreur de mise à jour du monstre: " . $e->getMessage();
+            
+            // Retourne faux en cas d'échec
+            return false;
+        }
+    }
+
     public function trouverMonstreParId($id) {
         try {
             //Recherche un monstre en particulier en fonction de l'id
@@ -122,7 +145,7 @@ class DAO{
             $resultat = $requete->fetch(PDO::FETCH_ASSOC);
 
             if ($resultat) {
-                return new Monstre($resultat['Nom'], $resultat['Pv'], $resultat['PA'], $resultat['PD'], $resultat['exp_donne']);
+                return new Monstre($resultat['Nom'], $resultat['Pv'], $resultat['PA'], $resultat['PD'], $resultat['exp_donne'], $resultat['PV_initial']);
             } else {
                 return null;
             }

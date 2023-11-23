@@ -93,16 +93,16 @@ class Monstre {
     private $pv;
     private $pa;
     private $pd;
-
     private $exp_donne;
-
+    private $PV_initial;
     //Initialisation des propriétés d'un objet à l'aide du constructor
-    public function __construct($nom, $pv, $pa,$pd,$exp_donne) {
+    public function __construct($nom, $pv, $pa,$pd,$exp_donne,$PV_initial) {
         $this->nom = $nom;
         $this->pv = $pv;
         $this->pa = $pa;
         $this->pd = $pd;
         $this->exp_donne = $exp_donne;
+        $this->PV_initial=$PV_initial;
     }
 
     //création de fonction _get afin de pouvoir récupérer les valeurs de chaques variables
@@ -121,6 +121,9 @@ class Monstre {
     }
     public function getExpDonne() {
         return $this->exp_donne;
+    }
+    public function getPVInitial() {
+        return $this->PV_initial;
     }
     public function getId() {
         return $this->id;
