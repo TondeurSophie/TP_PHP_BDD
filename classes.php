@@ -1,7 +1,9 @@
 <?php
 
+//création d'une classe Personnage
 class Personnages{
-    private $id;
+    //création de variables en private car on ne les utilise pas en dehors de la classe
+    private $id; //Ne sert a rien car id en auto-increment
     private $nom;
     private $PV;
     private $PA;
@@ -9,6 +11,7 @@ class Personnages{
     private $exp;
     private $niveau;
 
+    //Initialisation des propriétés d'un objet à l'aide du constructor
     public function __construct($id,$nom,$PV,$PA,$PD,$exp,$niveau){
         $this->id=$id;
         $this->nom=$nom;
@@ -19,6 +22,7 @@ class Personnages{
         $this->niveau=$niveau;
     }
 
+    //création de fonction _get afin de pouvoir récupérer les valeurs de chaques variables
     public function getId(){
         return $this->id;
     }
@@ -43,12 +47,15 @@ class Personnages{
 }
 
 
+//création d'une classe Salle
 class Salle{
-    private $id;
+    //création de variables en private car on ne les utilise pas en dehors de la classe
+    private $id;//Ne sert a rien car id en auto-increment
     private $niveau;
     private $epreuve;
     private $recompense;
 
+    //Initialisation des propriétés d'un objet à l'aide du constructor
     public function __construct($id,$niveau,$epreuve,$recompense){
         $this->id=$id;
         $this->niveau = $niveau;
@@ -56,6 +63,7 @@ class Salle{
         $this->recompense = $recompense;
     }
 
+    //création de fonction _get afin de pouvoir récupérer les valeurs de chaques variables
     public function get_Id(){
         return $this->id;
     }
@@ -77,7 +85,9 @@ class Salle{
 }
 
 
+//création d'une classe Monstre
 class Monstre {
+    //création de variables en private car on ne les utilise pas en dehors de la classe
     private $id; //Ne sert a rien car id en auto-increment
     private $nom;
     private $pv;
@@ -86,7 +96,7 @@ class Monstre {
 
     private $exp_donne;
 
-
+    //Initialisation des propriétés d'un objet à l'aide du constructor
     public function __construct($nom, $pv, $pa,$pd,$exp_donne) {
         $this->nom = $nom;
         $this->pv = $pv;
@@ -95,6 +105,7 @@ class Monstre {
         $this->exp_donne = $exp_donne;
     }
 
+    //création de fonction _get afin de pouvoir récupérer les valeurs de chaques variables
     public function getNom() {
         return $this->nom;
     }
