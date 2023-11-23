@@ -216,10 +216,24 @@ class DAO{
             return false;
         }
     }
-
-    public function ajouterInventaire(Inventaire $inventaire, $id_marchand) {
+    
+    //on ajoute un objet du marchand dans notre inventaire
+    public function ajouter(Inventaire $inventaire){
+        //Ajout d'un objet dans la base de données
+        try {
+            $requete2 = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD) VALUES (?, ?, ?, ?)");
+            $requete2->execute([$inventaire->getNom(), $inventaire->getPV(), $inventaire->getPA(), $inventaire->getPD()]);
+            
+        } catch (PDOException $e) {
+            echo "Erreur d'ajout de l'objet dans l'inventaire: " . $e->getMessage();
+            return false;
+        }
+    } 
+    //fonction qui permet d'ajouter à notre inventaire l'objet du marchand
+    //on récupère tout notre objet
+    public function ajouterInventaire($id_marchand) {
         try{
-            $requete = $this->bdd->prepare("SELECT * FROM inventaire WHERE id = ?");
+            $requete = $this->bdd->prepare("SELECT * FROM marchand WHERE id = ?");
             $requete->execute([$id_marchand]);
             // $requete->execute([$inventaire->getNom(), $inventaire->getPV(), $inventaire->getPA(), $inventaire->getPD()]);
             $info=$requete->fetch();
@@ -227,20 +241,46 @@ class DAO{
             
             $Inventaire=new Inventaire($info ["Nom"],$info["PV"],$info["PA"],$info["PD"]);
             
-            if ($Inventaire != Null){
-                //Ajout d'un objet dans la base de données
-                try {
-                    $requete2 = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD) VALUES (?, ?, ?, ?)");
-                    $requete2->execute([$inventaire->getNom(), $inventaire->getPV(), $inventaire->getPa(), $inventaire->getPd()]);
-                    
-                } catch (PDOException $e) {
-                    echo "Erreur d'ajout de l'objet dans l'inventaire: " . $e->getMessage();
-                    return false;
-                }
-            }
-        return true;
+            //on ajoute dans notre inventaire
+            $this->ajouter($Inventaire);
+            
+            return true;
         }catch (PDOException $e) {
             echo "Erreur d'ajout de l'objet dans l'inventaire: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    //on ajoute un objet du marchand dans notre inventaire
+    public function ajouterObjetMarchand(Marchand $marchand){
+        //Ajout d'un objet dans la base de données
+        try {
+            $requete2 = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD) VALUES (?, ?, ?, ?)");
+            $requete2->execute([$marchand->getNom(), $marchand->getPV(), $marchand->getPA(), $marchand->getPD()]);
+            
+        } catch (PDOException $e) {
+            echo "Erreur d'ajout de l'objet dans l'inventaire du marchand : " . $e->getMessage();
+            return false;
+        }
+    } 
+    //fonction qui permet d'ajouter à notre inventaire l'objet du marchand
+    //on récupère tout notre objet
+    public function ajouterInventaireMarchand($id_inventaire) {
+        try{
+            $requete = $this->bdd->prepare("SELECT * FROM inventaire WHERE id = ?");
+            $requete->execute([$id_inventaire]);
+            // $requete->execute([$inventaire->getNom(), $inventaire->getPV(), $inventaire->getPA(), $inventaire->getPD()]);
+            $info=$requete->fetch();
+            echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n");
+            
+            $Marchand=new Marchand($info ["Nom"],$info["PV"],$info["PA"],$info["PD"]);
+            
+            //on ajoute dans notre Marchand
+            $this->ajouterObjetMarchand($Marchand);
+            
+            return true;
+        }catch (PDOException $e) {
+            echo "Erreur d'ajout de l'objet dans l'inventaire du marchand: " . $e->getMessage();
             return false;
         }
         

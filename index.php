@@ -39,25 +39,29 @@ $DAO = new DAO($connexion);
                     echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
                 }
             }
+            // le marchand donne un nom aléatoire des objets = id_inventaire
+            //seulement si on a l'objet dans notre inventaire
+            //select * from inventaire where Id = ?
             echo "Choix des objets :\n ";
             $personnages=$DAO->listerInventaire();
-            $id_inventaire=readline("Quel objet échangez vous ? (Id)");
+            // $id_inventaire=readline("Quel objet échangez vous ? (Id)");
             // $personnages=$DAO->listerMarchand();
-            if ($personnages){
-                foreach($personnages as $e){
-                    echo "Id : ".$e['Id']."\n";
-                    echo 'Nom : '.$e['Nom']."\n";
-                    echo 'Points de Vie : '.$e['PV']."\n";
-                    echo 'Points Attaque : '.$e['PA']."\n";
-                    echo 'Points de Défence : '.$e['PD']."\n";
-                    echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
-                }
-            }
+            // if ($personnages){
+            //     foreach($personnages as $e){
+            //         echo "Id : ".$e['Id']."\n";
+            //         echo 'Nom : '.$e['Nom']."\n";
+            //         echo 'Points de Vie : '.$e['PV']."\n";
+            //         echo 'Points Attaque : '.$e['PA']."\n";
+            //         echo 'Points de Défence : '.$e['PD']."\n";
+            //         echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
+            //     }
+            // }
             $id_marchand=readline("Quel objet du marchand voulez-vous ? (Id)");
             $choix=readline("Voulez-vous continuer ? (Oui/Non)");
             if ($choix == "Oui"){
                 $personnages=$DAO->supprimerObjetInventaire($id_inventaire);
-                $personnages=$DAO->ajouterInventaire($inventaire,$id_marchand);
+                $personnages=$DAO->ajouterInventaire($id_marchand);
+                $personnages=$DAO->ajouterInventaireMarchand($id_inventaire);
             }
 
             break;
