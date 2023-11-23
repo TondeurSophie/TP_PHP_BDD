@@ -37,9 +37,28 @@ create table arme(
     -> Pd int(11))
     -> ENGINE InnoDB;
 
+
+create table marchand(
+    -> Id int primary key auto_increment,
+    -> Nom varchar(100),
+    -> PV int(11),
+    -> PA int(11),
+    -> PD int(11))
+    -> ENGINE InnoDB;
+
+create table inventaire(
+    -> Id int primary key auto_increment,
+    -> Nom varchar(100),
+    -> PV int(11),
+    -> PA int(11),
+    -> PD int(11))
+    -> ENGINE InnoDB;
+
 insert into personnage values (1,"Star",20,5,10,2,1);
 insert into personnage values (2,"Gold",40,8,12,6,1);
 insert into salle values (1, "enigme","épée");
 insert into salle values (2, "combat","pieces");
 insert into monstre values (1,"monstre", 20,5,10,6);
 insert into monstre values (2,"monstre2", 40,10,20,2);
+insert into marchand values (1,"Epee", 0, 2,0);
+insert into marchand values (2,"Bouclier", 0, 0,5);
