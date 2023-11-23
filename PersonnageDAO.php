@@ -137,6 +137,64 @@ class DAO{
         }
     }
 
+    public function attaquerMonstre($idPersonnage, $idMonstre) {
+        try {
+            //Récupére les points d'attaque du personnage depuis la base de données
+            $requetePersonnage = $this->bdd->prepare("SELECT PA FROM personnage WHERE Id = ?");
+            $requetePersonnage->execute([$idPersonnage]);
+            $statsPersonnage = $requetePersonnage->fetch(PDO::FETCH_ASSOC);
+    
+            //Récupére la vie actuelle du monstre depuis la base de données
+            $requeteMonstre = $this->bdd->prepare("SELECT Pv FROM monstre WHERE Id = ?");
+            $requeteMonstre->execute([$idMonstre]);
+            $vieMonstre = $requeteMonstre->fetchColumn();
+    
+            $degats = $statsPersonnage['PA'];
+    
+            //Calcul des dégâts
+            $nouvelleVieMonstre = $vieMonstre - $degats;
+    
+            //Mise à jour de la BDD
+            $requeteUpdate = $this->bdd->prepare("UPDATE monstre SET Pv = ? WHERE Id = ?");
+            $requeteUpdate->execute([$nouvelleVieMonstre, $idMonstre]);
+    
+            return $degats;
+            //Message d'erreur
+        } catch (PDOException $e) {
+            echo "Erreur lors de l'attaque du monstre: " . $e->getMessage();
+            return 0;
+        }
+    }
+
+    public function attaquerPersonnage($idMonstre, $idPersonnage) {
+        try {
+            //Récupére les statistiques d'attaque du monstre depuis la base de données
+            $requeteMonstre = $this->bdd->prepare("SELECT PA FROM monstre WHERE Id = ?");
+            $requeteMonstre->execute([$idMonstre]);
+            $statsMonstre = $requeteMonstre->fetch(PDO::FETCH_ASSOC);
+    
+            //Récupére la vie actuelle du personnage depuis la base de données
+            $requetePersonnage = $this->bdd->prepare("SELECT Pv FROM personnage WHERE Id = ?");
+            $requetePersonnage->execute([$idPersonnage]);
+            $viePersonnage = $requetePersonnage->fetchColumn();
+    
+            $degats = $statsMonstre['PA'];
+
+            //Calcul des dégâts
+            $nouvelleViePersonnage = $viePersonnage - $degats;
+    
+            //Mise à jour de la BDD
+            $requeteUpdate = $this->bdd->prepare("UPDATE personnage SET Pv = ? WHERE Id = ?");
+            $requeteUpdate->execute([$nouvelleViePersonnage, $idPersonnage]);
+    
+            return $degats;
+        } catch (PDOException $e) {
+            //Message d'erreur
+            echo "Erreur lors de l'attaque du monstre: " . $e->getMessage();
+            return 0; 
+        }
+    }
+
     public function trouverMonstreParId($id) {
         try {
             //Recherche un monstre en particulier en fonction de l'id

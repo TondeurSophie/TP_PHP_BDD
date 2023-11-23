@@ -9,15 +9,15 @@ $choix=readline("Que voulez faire ?\n 1. Ajouter un utilisateur\n 2. Lister les 
 
 switch ($choix){
     case "1":
-        $nom=readline("Entrer le nom : ");
-        $PV=readline("Entrer le PV : ");
-        $PA=readline("Entrer le PA : ");
-        $PD=readline("Entrer le PD : ");
-        $exp=readline("Entrer le exp : ");
-        $monstre=new Monstre ($nom,$PV,$PA,$PD,$exp,100);
-        $DAO->ressuciterMonstre($monstre,1);
-        $Perso = new Personnages($nom,$PV,$PA,$PD,$exp,1);
-        $DAO->ajouterPersonnage($Perso);
+        // $nom=readline("Entrer le nom : ");
+        // $PV=readline("Entrer le PV : ");
+        // $PA=readline("Entrer le PA : ");
+        // $PD=readline("Entrer le PD : ");
+        // $exp=readline("Entrer le exp : ");
+        //$monstre=new Monstre ($nom,$PV,$PA,$PD,$exp,100);
+        $DAO->attaquerMonstre(1,1);
+        //$Perso = new Personnages($nom,$PV,$PA,$PD,$exp,1);
+        //$DAO->ajouterPersonnage($Perso);
         echo "Le personnage a bien été ajouté. \n";
         echo "Liste des personnages : \n";
         $personnages = $DAO->listerPersonnage();
