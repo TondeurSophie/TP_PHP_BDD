@@ -126,4 +126,46 @@ class Monstre {
         return $this->id;
     }
 }
+
+//création d'une classe Monstre
+class Arme {
+    //création de variables en private car on ne les utilise pas en dehors de la classe
+    private $id; //Ne sert a rien car id en auto-increment
+    private $nom;
+    private $niveauRequis;
+    private $pv;
+    private $pa;
+    private $pd;
+
+
+    //Initialisation des propriétés d'un objet à l'aide du constructor
+    public function __construct($nom, $niveauRequis, $pv, $pa,$pd) {
+        $this->nom = $nom;
+        $this->niveauRequis = $niveauRequis;
+        $this->pv = $pv;
+        $this->pa = $pa;
+        $this->pd = $pd;
+    }
+
+    //création de fonction _get afin de pouvoir récupérer les valeurs de chaques variables
+    public function getNom() {
+        return $this->nom;
+    }
+
+    public function getPv() {
+        return $this->pv;
+    }
+    public function getPa() {
+        return $this->pa;
+    }
+    public function getPd() {
+        return $this->pd;
+    }
+    public function getNiveauRequis() {
+        return $this->niveauRequis;
+    }
+    public function getId() {
+        return $this->id;
+    }
+}
 ?>

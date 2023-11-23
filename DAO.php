@@ -143,6 +143,42 @@ class DAO{
             return false;
         }
     }
+    public function ajouterArme(Arme $arme) {
+        //Ajout du arme dans la base de données
+        try {
+            $requete = $this->bdd->prepare("INSERT INTO arme (Nom, Niveau_requis, Pv, PA, PD) VALUES (?, ?, ?, ?, ?)");
+            $requete->execute([$arme->getNom(), $arme->getNiveauRequis(), $arme->getPV(), $arme->getPa(), , $arme->getPd()]);
+            return true;
+        } catch (PDOException $e) {
+            echo "Erreur d'ajout de arme: " . $e->getMessage();
+            return false;
+        }
+
+    }
+
+    public function listerArme() {
+        //Liste des armes en selectionnant toute la table
+        try {
+            $requete = $this->bdd->prepare("SELECT * FROM arme");
+            $requete->execute();
+            return $requete->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Erreur de récupération des objets : " . $e->getMessage();
+            return [];
+        }
+    }
+
+    public function listerArmeUtilisable(Arme $arme) {
+        try {
+            //Récupération des armes utilisable en fonction du niveau du personnage
+            $requete = $this->bdd->prepare("SELECT * FROM arme WHERE Niveau_requis <= ?");
+            $requete->execute([$arme->getNiveauRequis()]);
+            return $requete->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo "Erreur de récupération des armes: " . $e->getMessage();
+            return [];
+        }
+    }
 }
 
 

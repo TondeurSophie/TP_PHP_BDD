@@ -55,8 +55,11 @@ switch ($choix){
 
         break;
     case"4":
+        echo "Au revoir ! ";
         break;
     default:
+        echo "Au revoir ! ";
+        break;
 
 }
 
