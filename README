@@ -8,10 +8,9 @@ create table monstre(
     -> Nom varchar(100),
     -> Pv int(11),
     -> PA int(11),
+    -> PD int(11),
     -> exp_donne int(11))
     -> ENGINE InnoDB;
-
-alter table monstre add PD int(11);
 
 create table personnage(
     -> Id int primary key auto_increment,
