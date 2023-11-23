@@ -4,7 +4,7 @@ try {
     $hote = "localhost";
     $utilisateur = "azerty";
     $motDePasse = "mdp";
-    $nomDeLaBase = "TP3";
+    $nomDeLaBase = "DragonExamen";
     //Connexion à la base de données
     $connexion = new PDO("mysql:host=$hote;dbname=$nomDeLaBase", $utilisateur, $motDePasse);
     

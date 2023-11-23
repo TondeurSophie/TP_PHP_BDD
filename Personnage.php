@@ -1,14 +1,18 @@
 <?php
 class Salle {
     private $id; //Ne sert a rien car id en auto-increment
+    private $niveau;
     private $epreuve;
     private $recompense;
 
-    public function __construct($epreuve, $recompense, $listeArticle,$infoSupplementaire) {
+    public function __construct($niveau, $epreuve, $recompense, $listeArticle,$infoSupplementaire) {
+        $this->niveau = $niveau;
         $this->epreuve = $epreuve;
         $this->recompense = $recompense;
     }
-
+    public function getNiveau() {
+        return $this->niveau;
+    }
     public function getEpreuve() {
         return $this->epreuve;
     }
@@ -38,7 +42,6 @@ class Monstre {
         $this->pa = $pa;
         $this->pd = $pd;
         $this->exp_donne = $exp_donne;
-
     }
 
     public function getNom() {
