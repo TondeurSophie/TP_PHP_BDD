@@ -1,5 +1,6 @@
 <?php
 
+//permet d'appeler les fichiers associer à ce projet
 include("config.php");
 include("classes.php");
 include("DAO.php");

@@ -1,21 +1,20 @@
 <?php
 
-// include("config.php");
-// include("classes.php");
-// include("index.php");
-
+//création d'une classe DAO. Elle permet d'accèder aux données
 class DAO{
+    //création d'une variable $bdd en private car on ne l'utilise pas en dehors de la classe
     private $bdd;
 
     public function __construct($bdd) {
         $this->bdd = $bdd;
     }
 
+    //fonction qui permet d'ajouter un personnage
     public function ajouterPersonnage(Personnages $personnages) {
         try {
-            //Requête SQL permettant d'insérer un personnage dans la BDD avec ses attributs (nom, niveau et etoile)
+            //Requête SQL permettant d'insérer un personnage dans la BDD avec ses attributs 
             $requete = $this->bdd->prepare("INSERT INTO personnage (nom, PV,PA,PD,exp_donne,niveau) VALUES (?,?,?,?,?,?)");
-            // création du personnage avec les valeurs de l'objet Utilisateur
+            // création du personnage avec les valeurs de l'objet Personnages
             $requete->execute([$personnages->getNom(), $personnages->getPV(),$personnages->getPA(),$personnages->getPD(),$personnages->getexp(),$personnages->getNiveau()]);
             return true; //si tout fonctionne, on revoie true
         } 
@@ -125,6 +124,23 @@ class DAO{
         } catch (PDOException $e) {
             echo "Erreur de récupération des salles: " . $e->getMessage();
             return [];
+        }
+    }
+
+    public function monPerso($personnages,$id){
+        try{
+            //requete qui permet de récupérer toutes les infos du personnage choisi en fonction de son id
+            $requete=$this->bdd->prepare("SELECT * FROM personnage WHERE id = ?");
+            $requete->execute([$id]);
+            //on met les infos de  notre personnage dans un tableau
+            $info=$requete->fetch();
+            echo "Mon perso : \n";
+            //affichage des informations
+            echo ("Nom : ".$info ["nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n"."Expérience donne : ".$info["exp_donne"]."\n"."Niveau : ".$info["niveau"]."\n");
+            return true;
+        }catch (PDOException $e) {
+            echo "Erreur d'affichage monPerso: " . $e->getMessage();
+            return false;
         }
     }
 }
