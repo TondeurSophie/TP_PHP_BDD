@@ -41,22 +41,19 @@ class DAO{
             return [];
         }
     }
+
+    public function modifierPersonnage($Pv,$id){
+        try{
+            $requete=$this->bdd->prepare("UPDATE personnage SET Pv = ? WHERE id = ?");
+            $requete->execute([$Pv,$id]);
+            return true;
+        }catch (PDOException $e){
+            echo "Erreur modif salaire ".$e->getMessage();
+        }
+    }
 }
 
-// $DAO = new DAO($connexion);
 
-// echo "Liste des personnages : \n";
-// $personnages = $DAO->listerPersonnage();
-// print_r($personnages);
-
-// $nom=readline("Entrer le nom : ");
-// $PV=readline("Entrer le PV : ");
-// $PA=readline("Entrer le PA : ");
-// $PD=readline("Entrer le PD : ");
-// $exp=readline("Entrer le exp : ");
-// $Perso = new Personnages("",$nom,$PV,$PA,$PD,$exp,1);
-// $DAO->ajouterPersonnage($Perso);
-// echo "Le personnage a bien été ajouté. \n";
 
 
 

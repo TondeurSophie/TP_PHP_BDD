@@ -9,7 +9,9 @@ $DAO = new DAO($connexion);
 
 $choix=readline("Que voulez faire ?
 1. Ajouter un utilisateur
-2. Lister les personnages \n");
+2. Lister les personnages 
+3. Jouer 
+4. Quitter \n");
 
 switch ($choix){
     case "1":
@@ -48,6 +50,12 @@ switch ($choix){
         }
         break;
 
+    case"3":
+
+        break;
+    case"4":
+        break;
+    default:
 
 }
 
