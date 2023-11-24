@@ -20,7 +20,7 @@ create table personnage(
     -> PV int(11),
     -> PA int(11),
     -> PD int(11),
-    -> exp_donne int(11),
+    -> exp int(11),
     -> niveau int(11))
     -> ENGINE InnoDB;
 
