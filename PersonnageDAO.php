@@ -195,7 +195,7 @@ class DAO{
 
     public function demanderActionJoueur() {
         //Attaque ou se défends
-        echo "Tour du joueur. Choisissez votre action (attaquer/se défendre): ";
+        echo "Tour du joueur. Choisissez votre action (attaquer/defendre) : ";
         $action = trim(readline());
         return strtolower($action);
     }
@@ -567,7 +567,28 @@ public function EnigmeAléatoire(){
         return false; 
     }
 }
-public function monPerso($personnages,$id){
+
+public function gagnerExpérience($idPersonnage){
+    try{
+        // recupérer l'expérience du perso 
+        $requeteEXP= $this->bdd->prepare("SELECT exp FROM personnage WHERE Id = ?");
+        $requeteEXP->execute([$idPersonnage]);
+        $expPersonnage= $requeteEXP-> fetch(PDO::FETCH_ASSOC);
+
+        $i=1;
+
+        // vérifier les points d'expérience du personnage + augmentation des points nécessaires pour le prochain palier 
+        if ($requeteEXP >= 50*$i){
+            $this->monterNiveauPersonnage($idPersonnage);
+            echo "votre personnage est monté de niveau";
+            $i=$i+1;
+            }
+    }
+    
+    catch (PDOException $e) {
+        echo "Erreur de la mise à jour de l'expérience : " . $e->getMessage();
+        return [];
+}}public function monPerso($personnages,$id){
     try{
         //requete qui permet de récupérer toutes les infos du personnage choisi en fonction de son id
         $requete=$this->bdd->prepare("SELECT * FROM personnage WHERE id = ?");
