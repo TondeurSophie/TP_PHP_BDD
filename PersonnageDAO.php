@@ -428,12 +428,36 @@ public function ajouterInventaire($id_marchand) {
     }
 }
 
+public function ajouterObjetInventaire($idPersonnage, $idObjet) {
+    //Vérifie le nombre d'objets actuels de l'inventaire du personnage
+    $requeteCompteur = $this->bdd->prepare("SELECT COUNT(*) FROM inventaire WHERE idPersonnage = ?");
+    $requeteCompteur->execute([$idPersonnage]);
+    $nombreObjets = $requeteCompteur->fetchColumn();
+    //Inventaire initialisé a 10 objets max si moins de 10 objets va chercher les caracteristiques de l'objet en question
+    if ($nombreObjets < 10) {
+        $requeteObjet = $this->bdd->prepare("SELECT Nom, Niveau_requis, Pv, Pa, Pd FROM arme WHERE Id = ?");
+        $requeteObjet->execute([$idObjet]);
+        $arme = $requeteObjet->fetch(PDO::FETCH_ASSOC);
+
+        if ($arme) {
+        //Ajout de l'objet
+            $requeteAjout = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD, idPersonnage) VALUES (?, ?, ?, ?, ?)");
+            $requeteAjout->execute([$arme['Nom'], $arme['Pv'], $arme['Pa'], $arme['Pd'], $idPersonnage]);
+            echo "Objet ajouté à l'inventaire : " . $arme['Nom'];
+        } else {
+            echo "L'objet n'existe pas dans la table arme.";
+        }
+    } else {
+        echo "L'inventaire est plein. Vous ne pouvez pas ajouter plus d'objets.";
+    }
+}
+
 //on ajoute un objet du marchand dans notre inventaire
 public function ajouterObjetMarchand(Marchand $marchand){
     //Ajout d'un objet dans la base de données
     try {
-        $requete2 = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD) VALUES (?, ?, ?, ?)");
-        $requete2->execute([$marchand->getNom(), $marchand->getPV(), $marchand->getPA(), $marchand->getPD()]);
+        $requete2 = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD, id_Personnage) VALUES (?, ?, ?, ?, ?)");
+        $requete2->execute([$marchand->getNom(), $marchand->getPV(), $marchand->getPA(), $marchand->getPD(), null]);
         
     } catch (PDOException $e) {
         echo "Erreur d'ajout de l'objet dans l'inventaire du marchand : " . $e->getMessage();
@@ -508,7 +532,7 @@ public function monPerso($personnages,$id){
         $info=$requete->fetch();
         echo "Mon perso : \n";
         //affichage des informations
-        echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n"."Expérience donne : ".$info["exp_donne"]."\n"."Niveau : ".$info["niveau"]."\n");
+        echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n"."Expérience : ".$info["exp"]."\n"."Niveau : ".$info["niveau"]."\n");
         return true;
     }catch (PDOException $e) {
         echo "Erreur d'affichage monPerso: " . $e->getMessage();

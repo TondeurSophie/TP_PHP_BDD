@@ -5,7 +5,7 @@ include("PersonnageDAO.php");
 
 $DAO = new DAO($connexion);
 
-
+$DAO->ajouterObjetInventaire(1,2);
 $choix=readline("Que voulez faire ?
 1. Ajouter un utilisateur
 2. Lister les personnages 
