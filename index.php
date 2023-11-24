@@ -48,12 +48,31 @@ switch ($choix){
 
     case"3":
 
+        //Manque la création de la salle permettant d'initialiser les valeurs ci-dessous
+        $idPersonnage = 1;
+        $idMonstre = 1;
+        $tour = 1;
+        
+        // Début du combat
+        while (true) {
+            echo ($tour);
+            $DAO->tourDeCombat($idPersonnage, $idMonstre, $tour);
+            $tour++;
+        
+            // Conditions de fin de combat (par exemple, si la vie du personnage ou du monstre atteint zéro)
+            if ($tour==5) {
+                echo("Fin du combat");
+                break;
+
+            }
+        }
+        
         break;
     case"4":
         echo "Au revoir ! ";
         break;
     default:
-    echo "Au revoir ! ";
+    echo "Crash du jeu ! ";
         break;
 
 }
