@@ -284,8 +284,56 @@ class DAO{
             return false;
         }
         
-
     }
+
+    public function AléatoireMarchand(){
+        try{
+            $requete=$this->bdd->prepare("SELECT * from arme WHERE Id = round(rand() * 9) + 1");
+            $requete->execute();
+            $info=$requete->fetch();
+            // echo ("Id : ".$info ["Id"]."\n"."Nom : ".$info ["Nom"]."\n"."PV : "."\n"."Niveau requis : ".$info ["Niveau_requis"]."\n"."PV : ".$info["Pv"]."\n"."PA : ".$info["Pa"]."\n"."PD : ".$info["Pd"]."\n");
+            print_r($info);
+            return $requete->fetchAll(PDO::FETCH_ASSOC);
+        }catch (PDOException $e) {
+            echo "Erreur d'ajout de l'objet dans l'inventaire du marchand: " . $e->getMessage();
+            return false;
+        }
+    }
+
+    // public function Echange($personnage){
+    //     try{
+    //         $requete=$this->bdd->prepare("select * from inventaire where Nom = ?");
+    //         $requete->execute($personnage['Nom']);
+    //         echo $personnage['Nom'];
+    //         $info=$requete->fetch();
+    //         // echo ("Id : ".$info ["Id"]."\n"."Nom : ".$info ["Nom"]."\n"."PV : ".$info["Pv"]."\n"."PA : ".$info["Pa"]."\n"."PD : ".$info["Pd"]."\n");
+    //         if($info != NULL){
+    //             echo "Choix des objets :\n ";
+    //             $this->listerInventaire();
+    //             $id_inventaire=readline("Quel objet échangez vous ? (Id)");
+    //             // $personnages=$DAO->listerMarchand();
+    //             // if ($personnages){
+    //             //     foreach($personnages as $e){
+    //             //         echo "Id : ".$e['Id']."\n";
+    //             //         echo 'Nom : '.$e['Nom']."\n";
+    //             //         echo 'Points de Vie : '.$e['PV']."\n";
+    //             //         echo 'Points Attaque : '.$e['PA']."\n";
+    //             //         echo 'Points de Défence : '.$e['PD']."\n";
+    //             //         echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
+    //             //     }
+    //             // }
+    //             $id_marchand=readline("Quel objet du marchand voulez-vous ? (Id)");
+    //             $choix=readline("Voulez-vous continuer ? (Oui/Non)");
+    //             if ($choix == "Oui"){
+    //                 $this->supprimerObjetInventaire($id_inventaire);
+    //                 $this->ajouterInventaire($id_marchand);
+    //                 $this->ajouterInventaireMarchand($id_inventaire);
+    //             }
+    //             }else{
+    //                 echo "Vous n'avez pas ce que le marchand désire";
+    //             }
+    //     }
+    // }
 }
 
 

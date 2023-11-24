@@ -10,17 +10,7 @@ $DAO = new DAO($connexion);
 
 
 // if (nom de la salle == "Marchand"){
-    // $personnages=$DAO->listerMarchand();
-    // if ($personnages){
-    //     foreach($personnages as $e){
-    //         echo "Id : ".$e['Id']."\n";
-    //         echo 'Nom : '.$e['Nom']."\n";
-    //         echo 'Points de Vie : '.$e['PV']."\n";
-    //         echo 'Points Attaque : '.$e['PA']."\n";
-    //         echo 'Points de Défence : '.$e['PD']."\n";
-    //         echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
-    //     }
-    // }
+    
     $echange=readline("Voulez vous faire un échange ? (Oui/Non) ");
     switch($echange){
         case"Non" :
@@ -28,23 +18,6 @@ $DAO = new DAO($connexion);
             break;
         
         case "Oui":
-            $personnages=$DAO->listerMarchand();
-            if ($personnages){
-                foreach($personnages as $e){
-                    echo "Id : ".$e['Id']."\n";
-                    echo 'Nom : '.$e['Nom']."\n";
-                    echo 'Points de Vie : '.$e['PV']."\n";
-                    echo 'Points Attaque : '.$e['PA']."\n";
-                    echo 'Points de Défence : '.$e['PD']."\n";
-                    echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
-                }
-            }
-            // le marchand donne un nom aléatoire des objets = id_inventaire
-            //seulement si on a l'objet dans notre inventaire
-            //select * from inventaire where Id = ?
-            echo "Choix des objets :\n ";
-            $personnages=$DAO->listerInventaire();
-            // $id_inventaire=readline("Quel objet échangez vous ? (Id)");
             // $personnages=$DAO->listerMarchand();
             // if ($personnages){
             //     foreach($personnages as $e){
@@ -56,14 +29,49 @@ $DAO = new DAO($connexion);
             //         echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
             //     }
             // }
-            $id_marchand=readline("Quel objet du marchand voulez-vous ? (Id)");
-            $choix=readline("Voulez-vous continuer ? (Oui/Non)");
-            if ($choix == "Oui"){
-                $personnages=$DAO->supprimerObjetInventaire($id_inventaire);
-                $personnages=$DAO->ajouterInventaire($id_marchand);
-                $personnages=$DAO->ajouterInventaireMarchand($id_inventaire);
-            }
-
+            // le marchand donne un nom aléatoire des objets = id_inventaire
+            echo "Le marchand veut : \n";
+            $personnage=$DAO->AléatoireMarchand();
+            print_r($personnage);
+            if ($personnage){
+                    foreach($personnage as $e){
+                        echo "Id : ".$e['Id']."\n";
+                        echo 'Nom : '.$e['Nom']."\n";
+                        echo 'Points de Vie : '.$e['Pv']."\n";
+                        echo 'Points Attaque : '.$e['Pa']."\n";
+                        echo 'Points de Défence : '.$e['Pd']."\n";
+                        echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
+                    }
+                }
+                   
+                    $avoir=readline("Avez-vous l'objet en question ? \n");
+                        if ($avoir == "Oui"){
+                            echo "Choix des objets :\n ";
+                            $personnages=$DAO->listerInventaire();
+                            $id_inventaire=readline("Quel objet échangez vous ? (Id)");
+                            $personnages=$DAO->listerMarchand();
+                            if ($personnages){
+                                foreach($personnages as $e){
+                                    echo "Id : ".$e['Id']."\n";
+                                    echo 'Nom : '.$e['Nom']."\n";
+                                    echo 'Points de Vie : '.$e['PV']."\n";
+                                    echo 'Points Attaque : '.$e['PA']."\n";
+                                    echo 'Points de Défence : '.$e['PD']."\n";
+                                    echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
+                                }
+                            }
+                            $id_marchand=readline("Quel objet du marchand voulez-vous ? (Id)");
+                            $choix=readline("Voulez-vous continuer ? (Oui/Non)");
+                            if ($choix == "Oui"){
+                                $personnages=$DAO->supprimerObjetInventaire($id_inventaire);
+                                $personnages=$DAO->ajouterInventaire($id_marchand);
+                                $personnages=$DAO->ajouterInventaireMarchand($id_inventaire);
+                            }
+                            else{
+                                echo "Vous n'avez pas ce que le marchand désire";
+                            }
+                        }           
+            
             break;
     }
 // }
