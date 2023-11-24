@@ -69,8 +69,8 @@ insert into salle values (1, "enigme","épée");
 insert into salle values (2, "combat","pieces");
 insert into salle values (3,"marchand","echange");
 
-insert into monstre values (1,"monstre", 20,5,10,6,100);
-insert into monstre values (2,"monstre2", 40,10,20,2,100);
+insert into monstre values (1,"monstre", 20,5,10,10,100);
+insert into monstre values (2,"monstre2", 40,10,20,10,100);
 
 insert into marchand values (1,"Epee", 0, 2,0);
 insert into marchand values (2,"Bouclier", 0, 0,5);
