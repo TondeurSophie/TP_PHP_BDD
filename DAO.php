@@ -13,7 +13,7 @@ class DAO{
     public function ajouterPersonnage(Personnages $personnages) {
         try {
             //Requête SQL permettant d'insérer un personnage dans la BDD avec ses attributs 
-            $requete = $this->bdd->prepare("INSERT INTO personnage (nom, PV,PA,PD,exp_donne,niveau) VALUES (?,?,?,?,?,?)");
+            $requete = $this->bdd->prepare("INSERT INTO personnage (nom, PV,PA,PD,exp,niveau) VALUES (?,?,?,?,?,?)");
             // création du personnage avec les valeurs de l'objet Personnages
             $requete->execute([$personnages->getNom(), $personnages->getPV(),$personnages->getPA(),$personnages->getPD(),$personnages->getexp(),$personnages->getNiveau()]);
             echo "Le personnage a bien été ajouté. \n";
@@ -121,7 +121,7 @@ class DAO{
             $info=$requete->fetch();
             echo "Mon perso : \n";
             //affichage des informations
-            echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n"."Expérience donne : ".$info["exp_donne"]."\n"."Niveau : ".$info["niveau"]."\n");
+            echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n"."Expérience donne : ".$info["exp"]."\n"."Niveau : ".$info["niveau"]."\n");
             return true;
         }catch (PDOException $e) {
             echo "Erreur d'affichage monPerso: " . $e->getMessage();
@@ -440,8 +440,8 @@ class DAO{
                 echo "Vous vous défendez et avez réduit les dégâts reçus à $degats.";
                 
                 //Vérifie si le monstre est mort après l'attaque
-                if ($this->EstMortMonstre($idMonstre)) {
-                    echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
+                if ($this->EstMortPersonnage($idPersonnage)) {
+                    echo "Le personnage est mort. Le combat est terminé, Vous avez perdu.";
                     return false;
                 }
             } else  {
