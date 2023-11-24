@@ -356,7 +356,164 @@ class DAO{
     }
 
 
+
+public function listerMarchand() {
+    //Liste des objets que propose le marchant (limite à 5 objets)
+    try {
+        $requete = $this->bdd->prepare("SELECT * from marchand order by rand() limit 5;");
+        $requete->execute();
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Erreur de récupération des objets : " . $e->getMessage();
+        return [];
+    }
+}
+
+public function listerInventaire(){
+    //Liste des objets/armes du joueur
+    try {
+        $requete = $this->bdd->prepare("SELECT * from inventaire");
+        $requete->execute();
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Erreur de récupération des objets : " . $e->getMessage();
+        return [];
+    }
+}
+
+//fonction permettant de supprime un objet dans mon inventaire pour l'échange avec le marchand
+public function supprimerObjetInventaire($id_inventaire){
+    try{
+        $requete = $this->bdd->prepare("DELETE FROM inventaire WHERE id = ?");
+        $requete -> execute([$id_inventaire]);
+        return true;
+    }
+    catch(PDOException $e){
+        echo "Erreur de suppression de l'objet de l'inventaire : ".$e->getMessage();
+        return false;
+    }
+}
+
+//on ajoute un objet du marchand dans notre inventaire
+public function ajouter(Inventaire $inventaire){
+    //Ajout d'un objet dans la base de données
+    try {
+        $requete2 = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD) VALUES (?, ?, ?, ?)");
+        $requete2->execute([$inventaire->getNom(), $inventaire->getPV(), $inventaire->getPA(), $inventaire->getPD()]);
+        
+    } catch (PDOException $e) {
+        echo "Erreur d'ajout de l'objet dans l'inventaire: " . $e->getMessage();
+        return false;
+    }
+} 
+//fonction qui permet d'ajouter à notre inventaire l'objet du marchand
+//on récupère tout notre objet
+public function ajouterInventaire($id_marchand) {
+    try{
+        $requete = $this->bdd->prepare("SELECT * FROM marchand WHERE id = ?");
+        $requete->execute([$id_marchand]);
+        // $requete->execute([$inventaire->getNom(), $inventaire->getPV(), $inventaire->getPA(), $inventaire->getPD()]);
+        $info=$requete->fetch();
+        echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n");
+        
+        $Inventaire=new Inventaire($info ["Nom"],$info["PV"],$info["PA"],$info["PD"]);
+        
+        //on ajoute dans notre inventaire
+        $this->ajouter($Inventaire);
+        
+        return true;
+    }catch (PDOException $e) {
+        echo "Erreur d'ajout de l'objet dans l'inventaire: " . $e->getMessage();
+        return false;
+    }
+}
+
+//on ajoute un objet du marchand dans notre inventaire
+public function ajouterObjetMarchand(Marchand $marchand){
+    //Ajout d'un objet dans la base de données
+    try {
+        $requete2 = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD) VALUES (?, ?, ?, ?)");
+        $requete2->execute([$marchand->getNom(), $marchand->getPV(), $marchand->getPA(), $marchand->getPD()]);
+        
+    } catch (PDOException $e) {
+        echo "Erreur d'ajout de l'objet dans l'inventaire du marchand : " . $e->getMessage();
+        return false;
+    }
+} 
+//fonction qui permet d'ajouter à notre inventaire l'objet du marchand
+//on récupère tout notre objet
+public function ajouterInventaireMarchand($id_inventaire) {
+    try{
+        $requete = $this->bdd->prepare("SELECT * FROM inventaire WHERE id = ?");
+        $requete->execute([$id_inventaire]);
+        // $requete->execute([$inventaire->getNom(), $inventaire->getPV(), $inventaire->getPA(), $inventaire->getPD()]);
+        $info=$requete->fetch();
+        echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n");
+        
+        $Marchand=new Marchand($info ["Nom"],$info["PV"],$info["PA"],$info["PD"]);
+        
+        //on ajoute dans notre Marchand
+        $this->ajouterObjetMarchand($Marchand);
+        
+        return true;
+    }catch (PDOException $e) {
+        echo "Erreur d'ajout de l'objet dans l'inventaire du marchand: " . $e->getMessage();
+        return false;
+    }
     
-    
+}
+
+//cette fonction permet de généré un objet aléatoire que souhaite obtenir le marchand
+public function AléatoireMarchand(){
+    try{
+        $requete=$this->bdd->prepare("SELECT * from arme WHERE Id = round(rand() * 9) + 1");
+        $requete->execute();
+        $info=$requete->fetch();
+        // echo ("Id : ".$info ["Id"]."\n"."Nom : ".$info ["Nom"]."\n"."PV : "."\n"."Niveau requis : ".$info ["Niveau_requis"]."\n"."PV : ".$info["Pv"]."\n"."PA : ".$info["Pa"]."\n"."PD : ".$info["Pd"]."\n");
+        print_r($info);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }catch (PDOException $e) {
+        echo "Erreur d'ajout de l'objet dans l'inventaire du marchand: " . $e->getMessage();
+        return false;
+    }
+}
+
+//fonction qui permet de mettre une question aléatoire et de répondre à la question
+public function EnigmeAléatoire(){
+    try{
+        $requete=$this->bdd->prepare("SELECT * FROM questions WHERE Id = round(rand() * 9) + 1 ");
+        $requete->execute();
+        $question=$requete->fetch();
+        // echo ("Question : ".$question['Question']."\n");
+        print_r($question['Question']);
+        $reponse=readline("Votre réponse : ");
+        if($question['Reponse'] == $reponse){
+            echo"Bien joué";
+        }else{
+            echo "Game Over";
+            exit;
+        }
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }catch (PDOException $e) {
+        echo "Erreur d'ajout de l'objet dans l'inventaire du marchand: " . $e->getMessage();
+        return false;
+    }
+}
+public function monPerso($personnages,$id){
+    try{
+        //requete qui permet de récupérer toutes les infos du personnage choisi en fonction de son id
+        $requete=$this->bdd->prepare("SELECT * FROM personnage WHERE id = ?");
+        $requete->execute([$id]);
+        //on met les infos de  notre personnage dans un tableau
+        $info=$requete->fetch();
+        echo "Mon perso : \n";
+        //affichage des informations
+        echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n"."Expérience donne : ".$info["exp_donne"]."\n"."Niveau : ".$info["niveau"]."\n");
+        return true;
+    }catch (PDOException $e) {
+        echo "Erreur d'affichage monPerso: " . $e->getMessage();
+        return false;
+    }
+}
 }
 ?>

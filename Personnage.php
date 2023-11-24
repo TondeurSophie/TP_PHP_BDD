@@ -171,4 +171,77 @@ class Arme {
         return $this->id;
     }
 }
+
+class Marchand {
+    //création de variables en private car on ne les utilise pas en dehors de la classe
+    private $id; //Ne sert a rien car id en auto-increment
+    private $nom;
+    private $pv;
+    private $pa;
+    private $pd;
+
+
+    //Initialisation des propriétés d'un objet à l'aide du constructor
+    public function __construct($nom, $pv, $pa,$pd) {
+        $this->nom = $nom;
+        $this->pv = $pv;
+        $this->pa = $pa;
+        $this->pd = $pd;
+    }
+
+    //création de fonction _get afin de pouvoir récupérer les valeurs de chaques variables
+    public function getNom() {
+        return $this->nom;
+    }
+
+    public function getPv() {
+        return $this->pv;
+    }
+    public function getPa() {
+        return $this->pa;
+    }
+    public function getPd() {
+        return $this->pd;
+    }
+    public function getId() {
+        return $this->id;
+    }
+}
+
+//création d'une classe Monstre
+class Inventaire {
+    //création de variables en private car on ne les utilise pas en dehors de la classe
+    private $id; //Ne sert a rien car id en auto-increment
+    private $nom;
+    private $pv;
+    private $pa;
+    private $pd;
+
+
+    //Initialisation des propriétés d'un objet à l'aide du constructor
+    public function __construct($nom,$pv, $pa,$pd) {
+        $this->nom = $nom;
+        $this->pv = $pv;
+        $this->pa = $pa;
+        $this->pd = $pd;
+    }
+
+    //création de fonction _get afin de pouvoir récupérer les valeurs de chaques variables
+    public function getNom() {
+        return $this->nom;
+    }
+
+    public function getPv() {
+        return $this->pv;
+    }
+    public function getPa() {
+        return $this->pa;
+    }
+    public function getPd() {
+        return $this->pd;
+    }
+    public function getId() {
+        return $this->id;
+    }
+}
 ?>
