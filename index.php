@@ -54,14 +54,17 @@ switch ($choix){
         $tour = 1;
         
         //Début du combat
-        while (true) {
-            $DAO->tourDeCombat($idPersonnage, $idMonstre, $tour);
+        $issu = true;
+
+// Boucle de combat
+        while ($issu) {
+            $issu = $DAO->tourDeCombat($idPersonnage, $idMonstre, $tour);
             $tour++;
-            if($DAO->tourDeCombat($idPersonnage, $idMonstre, $tour)==false){
-                break;
-            }
-        }
-        echo("Fin du combat");
+    }
+    
+
+// À ce stade, le combat est terminé
+echo "Fin du combat";
 
         break;
     case"4":

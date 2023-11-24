@@ -234,39 +234,38 @@ class DAO{
         //Vérifie si c'est le tour du joueur
         if ($tour % 2 == 1) {
             $action = $this->demanderActionJoueur();
+    
             if ($action == 'attaquer') {
                 $degats = $this->attaquerMonstre($idPersonnage, $idMonstre);
                 echo "Vous avez infligé $degats points de dégâts au monstre.";
-    
                 //Vérifie si le monstre est mort après l'attaque
                 if ($this->EstMortMonstre($idMonstre)) {
                     echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
                     return false;
                 }
-            }
-            if ($action == 'defendre') {
+            } elseif ($action == 'defendre') {
                 //Le joueur se défend, réduit les dégâts du monstre
                 $degats = $this->attaquerPersonnage($idMonstre, $idPersonnage, true);
                 echo "Vous vous défendez et avez réduit les dégâts reçus à $degats.";
-                
                 //Vérifie si le monstre est mort après l'attaque
-                if ($this->EstMortMonstre($idMonstre)) {
-                    echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
+                if ($this->EstMortPersonnage($idPersonnage)) {
+                    echo "Le personnage est mort. Le combat est terminé, Vous avez gagné.";
                     return false;
                 }
-            } else  {
+            }
+        } else {
             // Tour du monstre
             $degats = $this->attaquerPersonnage($idMonstre, $idPersonnage, false);
             echo "Le monstre vous a infligé $degats points de dégâts.";
-    
             //Vérifie si le personnage est mort après l'attaque du monstre
             if ($this->EstMortPersonnage($idPersonnage)) {
                 echo "Vous êtes mort. Le combat est terminé.";
                 return false;
             }
         }
+    
+        return true;
     }
-}
 
     public function trouverMonstreParId($id) {
         try {
