@@ -5,7 +5,6 @@ include("PersonnageDAO.php");
 
 $DAO = new DAO($connexion);
 
-$DAO->ajouterObjetInventaire(1,2);
 $choix=readline("Que voulez faire ?
 1. Ajouter un utilisateur
 2. Lister les personnages 
@@ -84,7 +83,6 @@ switch ($choix){
 
             if (5>= $salle && $salle >=1){
                 echo "C'est l'heure de combattre \n";
-                //Manque la création de la salle permettant d'initialiser les valeurs ci-dessous
                 $idPersonnage = 1;
                 $idMonstre = 1;
                 $tour = 1;
@@ -101,15 +99,15 @@ switch ($choix){
 
             break;
             }
-            if (10>= $salle && $salle > 7 ){
+            if (10 >= $salle && $salle > 7) {
                 echo "Epreuve : Enigmes \n";
-                $enigme=$DAO->EnigmeAléatoire();
-                if ($enigme){
-                    foreach($enigme as $e){
-                        echo "Id : ".$e['Id']."\n";
-                        echo 'Question : '.$e['Question']."\n";
-                        echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
-                    }
+                $enigmeReussie = $DAO->EnigmeAléatoire();
+                
+                if ($enigmeReussie) {
+                    echo "Épreuve réussie !\n";
+                } else {
+                    echo "Épreuve échouée. Game Over.\n";
+                    exit;
                 }
             }
                 
