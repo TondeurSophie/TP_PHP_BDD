@@ -241,7 +241,7 @@ class DAO{
                 //Vérifie si le monstre est mort après l'attaque
                 if ($this->EstMortMonstre($idMonstre)) {
                     echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
-                    return;
+                    return false;
                 }
             }
             if ($action == 'defendre') {
@@ -252,7 +252,7 @@ class DAO{
                 //Vérifie si le monstre est mort après l'attaque
                 if ($this->EstMortMonstre($idMonstre)) {
                     echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
-                    return;
+                    return false;
                 }
             } else  {
             // Tour du monstre
@@ -262,7 +262,7 @@ class DAO{
             //Vérifie si le personnage est mort après l'attaque du monstre
             if ($this->EstMortPersonnage($idPersonnage)) {
                 echo "Vous êtes mort. Le combat est terminé.";
-                return;
+                return false;
             }
         }
     }

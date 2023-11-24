@@ -53,20 +53,16 @@ switch ($choix){
         $idMonstre = 1;
         $tour = 1;
         
-        // Début du combat
+        //Début du combat
         while (true) {
-            echo ($tour);
             $DAO->tourDeCombat($idPersonnage, $idMonstre, $tour);
             $tour++;
-        
-            // Conditions de fin de combat (par exemple, si la vie du personnage ou du monstre atteint zéro)
-            if ($tour==5) {
-                echo("Fin du combat");
+            if($DAO->tourDeCombat($idPersonnage, $idMonstre, $tour)==false){
                 break;
-
             }
         }
-        
+        echo("Fin du combat");
+
         break;
     case"4":
         echo "Au revoir ! ";
