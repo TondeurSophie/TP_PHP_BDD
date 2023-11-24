@@ -119,7 +119,7 @@ class DAO{
     public function listerSalle(Salle $salle) {
         try {
             //Récupération de toutes les salles
-            $requete = $this->bdd->prepare("SELECT * FROM salle");
+            $requete = $this->bdd->prepare("SELECT * FROM salle ");
             $requete->execute();
             return $requete->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
@@ -300,6 +300,7 @@ class DAO{
         }
     }
 
+    //fonction qui permet de mettre une question aléatoire et de répondre à la question
     public function EnigmeAléatoire(){
         try{
             $requete=$this->bdd->prepare("SELECT * FROM questions WHERE Id = round(rand() * 9) + 1 ");
@@ -312,6 +313,7 @@ class DAO{
                 echo"Bien joué";
             }else{
                 echo "Game Over";
+                exit;
             }
             return $requete->fetchAll(PDO::FETCH_ASSOC);
         }catch (PDOException $e) {
@@ -319,6 +321,8 @@ class DAO{
             return false;
         }
     }
+
+    
 }
 
 

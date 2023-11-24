@@ -8,8 +8,10 @@ include("DAO.php");
 
 $DAO = new DAO($connexion);
 
+$salle = rand(1,10);
+// echo $salle;
 
-// if (nom de la salle == "Marchand"){
+// if (7 >= $salle >5  ){
     
     // $echange=readline("Voulez vous faire un échange ? (Oui/Non) ");
     // switch($echange){
@@ -74,7 +76,7 @@ $DAO = new DAO($connexion);
     // }
 // }
 
-//if (nom salle == "Enigme"){
+//if (10>= $salle > 7 ){
     $enigme=$DAO->EnigmeAléatoire();
     if ($enigme){
         foreach($enigme as $e){
@@ -90,6 +92,10 @@ $DAO = new DAO($connexion);
     // else{
     //     echo "Game Over";
     // }
+
+// if (5>= $salle >=1){
+//     //combat
+// }
 
 
 
