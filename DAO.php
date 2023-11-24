@@ -230,6 +230,17 @@ class DAO{
         }
     }
     
+    public function Expérience($idPersonnage, $idMonstre){
+        try{
+            $requete=$this->bdd->prepare("UPDATE personnage SET exp = exp + 10 WHERE Id = ?");
+            $requete->execute([$idPersonnage]);
+            $info = $requete->fetch(PDO::FETCH_ASSOC);
+        }catch (PDOException $e) {
+            echo "Erreur lors de l'ajout d'expérience au personnage : " . $e->getMessage();
+            return false;
+        }
+    }
+
     public function tourDeCombat($idPersonnage, $idMonstre, $tour) {
         //Vérifie si c'est le tour du joueur
         if ($tour % 2 == 1) {
@@ -241,6 +252,7 @@ class DAO{
                 //Vérifie si le monstre est mort après l'attaque
                 if ($this->EstMortMonstre($idMonstre)) {
                     echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
+                    $this->Expérience($idPersonnage, $idMonstre);
                     return false;
                 }
             } elseif ($action == 'defendre') {
@@ -339,7 +351,7 @@ class DAO{
             $requetePersonnage->execute([$idPersonnage]);
             $resultatPersonnage = $requetePersonnage->fetch(PDO::FETCH_ASSOC);
 
-            //Mise à jour du nombre d'étoiles collectées et du niveau du personnage
+            //Mise à jour du niveau du personnage
             $nouveauNiveau = $resultatPersonnage['niveau'] + 1;
             // $nouveauNiveau = $resultatNiveau['numero'];
 
@@ -480,23 +492,33 @@ public function AléatoireMarchand(){
 
 //fonction qui permet de mettre une question aléatoire et de répondre à la question
 public function EnigmeAléatoire(){
-    try{
-        $requete=$this->bdd->prepare("SELECT * FROM questions WHERE Id = round(rand() * 9) + 1 ");
+    try {
+        //Selectionne une question aléatoire
+        $requete = $this->bdd->prepare("SELECT * FROM questions ORDER BY RAND() LIMIT 1");
         $requete->execute();
-        $question=$requete->fetch();
-        // echo ("Question : ".$question['Question']."\n");
-        print_r($question['Question']);
-        $reponse=readline("Votre réponse : ");
-        if($question['Reponse'] == $reponse){
-            echo"Bien joué";
-        }else{
-            echo "Game Over";
-            exit;
+        $question = $requete->fetch(PDO::FETCH_ASSOC);
+        
+        //Vérifie si une question a été récupérée
+        if ($question) {
+            //Affiche la question
+            echo 'Question : ' . $question['Question'] . "\n";
+            
+            $reponse = readline("Votre réponse : ");
+
+            if ($question['Reponse'] == $reponse) {
+                echo "Bien joué";
+                return true;
+            } else {
+                echo "Game Over";
+                return false; 
+            }
+        } else {
+            echo "Aucune question trouvée.";
+            return false;
         }
-        return $requete->fetchAll(PDO::FETCH_ASSOC);
-    }catch (PDOException $e) {
-        echo "Erreur d'ajout de l'objet dans l'inventaire du marchand: " . $e->getMessage();
-        return false;
+    } catch (PDOException $e) {
+        echo "Erreur lors de la récupération de l'énigme : " . $e->getMessage();
+        return false; 
     }
 }
 public function monPerso($personnages,$id){
@@ -515,5 +537,7 @@ public function monPerso($personnages,$id){
         return false;
     }
 }
+    
 }
+
 ?>
