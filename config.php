@@ -4,8 +4,8 @@
         //on rentre nos informations
         $hote = "127.0.0.1";
         $utilisateur = "root";
-        $motDePasse = "password";
-        $nomDeLaBase = "ExamenPhp";
+        $motDePasse = "0zIOU8iwgW3658EshvUD";
+        $nomDeLaBase = "examenphp";
 
         //création d'une variable connexion, nous permettant avec PDO de nous connecter à la BDD
         $connexion = new PDO("mysql:host=$hote;dbname=$nomDeLaBase", $utilisateur,$motDePasse);

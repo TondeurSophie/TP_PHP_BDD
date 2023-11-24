@@ -224,23 +224,13 @@ class DAO{
     
             //Vérifie si la vie du monstre est inférieure ou égale à zéro
             return $vieMonstre <= 0;
+
         } catch (PDOException $e) {
             echo "Erreur lors de la vérification de la mort du monstre : " . $e->getMessage();
             return false;
         }
     }
     
-    public function Expérience($idPersonnage, $idMonstre){
-        try{
-            $requete=$this->bdd->prepare("UPDATE personnage SET exp = exp + 10 WHERE Id = ?");
-            $requete->execute([$idPersonnage]);
-            $info = $requete->fetch(PDO::FETCH_ASSOC);
-        }catch (PDOException $e) {
-            echo "Erreur lors de l'ajout d'expérience au personnage : " . $e->getMessage();
-            return false;
-        }
-    }
-
     public function tourDeCombat($idPersonnage, $idMonstre, $tour) {
         //Vérifie si c'est le tour du joueur
         if ($tour % 2 == 1) {
@@ -252,7 +242,6 @@ class DAO{
                 //Vérifie si le monstre est mort après l'attaque
                 if ($this->EstMortMonstre($idMonstre)) {
                     echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
-                    $this->Expérience($idPersonnage, $idMonstre);
                     return false;
                 }
             } elseif ($action == 'defendre') {
@@ -343,7 +332,6 @@ class DAO{
         }
     }
 
-    
     public function monterNiveauPersonnage($idPersonnage) {
         try {
             //Récupération des informations sur le personnage en fonction de l'id
@@ -361,11 +349,37 @@ class DAO{
 
             echo "Personnage mis à jour avec succès !\n";
             return true;
-        } catch (PDOException $e) {
+        }
+
+        catch (PDOException $e) {
             echo "Erreur lors de la mise à jour du personnage : " . $e->getMessage();
             return false;
         }
     }
+
+    // fonction pour gagner de l'expérience 
+
+    public function gagnerExpérience($idPersonnage){
+        try{
+            // recupérer l'expérience du perso 
+            $requeteEXP= $this->bdd->prepare("SELECT exp FROM personnage WHERE Id = ?");
+            $requeteEXP->execute([$idPersonnage]);
+            $expPersonnage= $requeteEXP-> fetch(PDO::FETCH_ASSOC);
+
+            $i=1;
+
+            // vérifier les points d'expérience du personnage + augmentation des points nécessaires pour le prochain palier 
+            if ($requeteEXP >= 50*$i){
+                $this->monterNiveauPersonnage($idPersonnage);
+                echo "votre personnage est monté de niveau";
+                $i=$i+1;
+                }
+        }
+        
+        catch (PDOException $e) {
+            echo "Erreur de la mise à jour de l'expérience : " . $e->getMessage();
+            return [];
+    }}
 
 
 
@@ -440,12 +454,36 @@ public function ajouterInventaire($id_marchand) {
     }
 }
 
+public function ajouterObjetInventaire($idPersonnage, $idObjet) {
+    //Vérifie le nombre d'objets actuels de l'inventaire du personnage
+    $requeteCompteur = $this->bdd->prepare("SELECT COUNT(*) FROM inventaire WHERE idPersonnage = ?");
+    $requeteCompteur->execute([$idPersonnage]);
+    $nombreObjets = $requeteCompteur->fetchColumn();
+    //Inventaire initialisé a 10 objets max si moins de 10 objets va chercher les caracteristiques de l'objet en question
+    if ($nombreObjets < 10) {
+        $requeteObjet = $this->bdd->prepare("SELECT Nom, Niveau_requis, Pv, Pa, Pd FROM arme WHERE Id = ?");
+        $requeteObjet->execute([$idObjet]);
+        $arme = $requeteObjet->fetch(PDO::FETCH_ASSOC);
+
+        if ($arme) {
+        //Ajout de l'objet
+            $requeteAjout = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD, idPersonnage) VALUES (?, ?, ?, ?, ?)");
+            $requeteAjout->execute([$arme['Nom'], $arme['Pv'], $arme['Pa'], $arme['Pd'], $idPersonnage]);
+            echo "Objet ajouté à l'inventaire : " . $arme['Nom'];
+        } else {
+            echo "L'objet n'existe pas dans la table arme.";
+        }
+    } else {
+        echo "L'inventaire est plein. Vous ne pouvez pas ajouter plus d'objets.";
+    }
+}
+
 //on ajoute un objet du marchand dans notre inventaire
 public function ajouterObjetMarchand(Marchand $marchand){
     //Ajout d'un objet dans la base de données
     try {
-        $requete2 = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD) VALUES (?, ?, ?, ?)");
-        $requete2->execute([$marchand->getNom(), $marchand->getPV(), $marchand->getPA(), $marchand->getPD()]);
+        $requete2 = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD, id_Personnage) VALUES (?, ?, ?, ?, ?)");
+        $requete2->execute([$marchand->getNom(), $marchand->getPV(), $marchand->getPA(), $marchand->getPD(), null]);
         
     } catch (PDOException $e) {
         echo "Erreur d'ajout de l'objet dans l'inventaire du marchand : " . $e->getMessage();
@@ -530,14 +568,12 @@ public function monPerso($personnages,$id){
         $info=$requete->fetch();
         echo "Mon perso : \n";
         //affichage des informations
-        echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n"."Expérience donne : ".$info["exp"]."\n"."Niveau : ".$info["niveau"]."\n");
+        echo ("Nom : ".$info ["Nom"]."\n"."PV : ".$info["PV"]."\n"."PA : ".$info["PA"]."\n"."PD : ".$info["PD"]."\n"."Expérience : ".$info["exp"]."\n"."Niveau : ".$info["niveau"]."\n");
         return true;
     }catch (PDOException $e) {
         echo "Erreur d'affichage monPerso: " . $e->getMessage();
         return false;
     }
 }
-    
 }
-
 ?>
