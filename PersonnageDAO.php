@@ -118,7 +118,7 @@ class DAO{
 
     }
 
-    public function ressuciterMonstre(Monstre $monstre,$id) {
+    public function ressuciterMonstre($id) {
         try {
             //Modifie les PV en PV_Initial pour ressuciter les monstres
             $requete = $this->bdd->prepare("UPDATE monstre SET Pv = PV_initial WHERE Id = ?");
@@ -242,6 +242,7 @@ class DAO{
                 if ($this->EstMortMonstre($idMonstre)) {
                     echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
                     $this->ajouterObjetVictoire($idPersonnage);
+                    $this->ressuciterMonstre($idMonstre);
                     return false;
                 }
             } elseif ($action == 'defendre') {
@@ -251,6 +252,7 @@ class DAO{
                 //Vérifie si le monstre est mort après l'attaque
                 if ($this->EstMortPersonnage($idPersonnage)) {
                     echo "Le personnage est mort. Le combat est terminé, Vous avez gagné.";
+                    
                     return false;
                 }
             }
@@ -261,6 +263,7 @@ class DAO{
             //Vérifie si le personnage est mort après l'attaque du monstre
             if ($this->EstMortPersonnage($idPersonnage)) {
                 echo "Vous êtes mort. Le combat est terminé.";
+
                 return false;
             }
         }
