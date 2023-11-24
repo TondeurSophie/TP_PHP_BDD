@@ -64,23 +64,7 @@ class DAO{
         }
 
     }
-    public function trouverMonstreParId($id) {
-        try {
-            //Recherche un monstre en particulier en fonction de l'id
-            $requete = $this->bdd->prepare("SELECT * FROM monstre WHERE id = ?");
-            $requete->execute([$id]);
-            $resultat = $requete->fetch(PDO::FETCH_ASSOC);
-
-            if ($resultat) {
-                return new Monstre($resultat['Nom'], $resultat['Pv'], $resultat['PA'], $resultat['PD'], $resultat['exp_donne']);
-            } else {
-                return null;
-            }
-        } catch (PDOException $e) {
-            echo "Erreur lors de la recherche du personnage par ID: " . $e->getMessage();
-            return null;
-        }
-    }
+    
     public function ajouterSalle(Salle $salle) {
         //Ajout des niveau (utilisé qu'au début afin de remplir un minimum la base de données)
         try {
@@ -205,6 +189,7 @@ class DAO{
         }
     }
 
+    //fonction permettant de supprime un objet dans mon inventaire pour l'échange avec le marchand
     public function supprimerObjetInventaire($id_inventaire){
         try{
             $requete = $this->bdd->prepare("DELETE FROM inventaire WHERE id = ?");
@@ -286,6 +271,7 @@ class DAO{
         
     }
 
+    //cette fonction permet de généré un objet aléatoire que souhaite obtenir le marchand
     public function AléatoireMarchand(){
         try{
             $requete=$this->bdd->prepare("SELECT * from arme WHERE Id = round(rand() * 9) + 1");
@@ -322,11 +308,195 @@ class DAO{
         }
     }
 
+    public function ressuciterMonstre(Monstre $monstre,$id) {
+        try {
+            //Modifie les PV en PV_Initial pour ressuciter les monstres
+            $requete = $this->bdd->prepare("UPDATE monstre SET Pv = PV_initial WHERE Id = ?");
+            
+            $requete->execute([$id]);
+            return true;
+        } catch (PDOException $e) {
+            // En cas d'erreur, affiche un message d'erreur
+            echo "Erreur de mise à jour du monstre: " . $e->getMessage();
+            
+            // Retourne faux en cas d'échec
+            return false;
+        }
+    }
+
+    public function attaquerMonstre($idPersonnage, $idMonstre) {
+        try {
+            // Récupérer les points d'attaque du personnage depuis la base de données
+            $requetePersonnage = $this->bdd->prepare("SELECT PA FROM personnage WHERE Id = ?");
+            $requetePersonnage->execute([$idPersonnage]);
+            $statsPersonnage = $requetePersonnage->fetch(PDO::FETCH_ASSOC);
+
+            // Récupérer la vie actuelle du monstre depuis la base de données
+            $requeteMonstre = $this->bdd->prepare("SELECT Pv FROM monstre WHERE Id = ?");
+            $requeteMonstre->execute([$idMonstre]);
+            $vieMonstre = $requeteMonstre->fetchColumn();
+
+            $degats = $statsPersonnage['PA'];
+
+            // Calcul des dégâts
+            $nouvelleVieMonstre = $vieMonstre - $degats;
+
+            // Mise à jour de la BDD
+            $requeteUpdate = $this->bdd->prepare("UPDATE monstre SET Pv = ? WHERE Id = ?");
+            $requeteUpdate->execute([$nouvelleVieMonstre, $idMonstre]);
+
+            return $degats;
+        } catch (PDOException $e) {
+            echo "Erreur lors de l'attaque du monstre: " . $e->getMessage();
+            return 0;
+        }
+    }
+
+    public function attaquerPersonnage($idMonstre, $idPersonnage, $defense = false) {
+        try {
+            //Récupération des statistiques d'attaque du monstre depuis la base de données
+            $requeteMonstre = $this->bdd->prepare("SELECT PA FROM monstre WHERE Id = ?");
+            $requeteMonstre->execute([$idMonstre]);
+            $statsMonstre = $requeteMonstre->fetch(PDO::FETCH_ASSOC);
     
+            //Récupération des points de défense du personnage depuis la base de données
+            $requetePersonnage = $this->bdd->prepare("SELECT PD FROM personnage WHERE Id = ?");
+            $requetePersonnage->execute([$idPersonnage]);
+            $statsPersonnage = $requetePersonnage->fetch(PDO::FETCH_ASSOC);
+    
+            //Calcul des dégâts en prenant en compte les points de défense
+            $degats = max(0, $statsMonstre['PA'] - ($defense ? $statsPersonnage['PD'] : 0));
+    
+            //Calcul des dégâts pour set la vie par la suite
+            $requeteViePersonnage = $this->bdd->prepare("SELECT Pv FROM personnage WHERE Id = ?");
+            $requeteViePersonnage->execute([$idPersonnage]);
+            $viePersonnage = $requeteViePersonnage->fetchColumn();
+            $nouvelleViePersonnage = max(0, $viePersonnage - $degats);
+    
+            $requeteUpdate = $this->bdd->prepare("UPDATE personnage SET Pv = ? WHERE Id = ?");
+            $requeteUpdate->execute([$nouvelleViePersonnage, $idPersonnage]);
+    
+            return $degats;
+        } catch (PDOException $e) {
+            echo "Erreur lors de l'attaque du personnage: " . $e->getMessage();
+            return 0;
+        }
+    }
+
+    public function demanderActionJoueur() {
+        //Attaque ou se défends
+        echo "Tour du joueur. Choisissez votre action (attaquer/se défendre): ";
+        $action = trim(readline());
+        return strtolower($action);
+    }
+
+    public function EstMortPersonnage($idPersonnage) {
+        try {
+            //Récupére la vie actuelle du personnage depuis la base de données
+            $requetePersonnage = $this->bdd->prepare("SELECT Pv FROM personnage WHERE Id = ?");
+            $requetePersonnage->execute([$idPersonnage]);
+            $viePersonnage = $requetePersonnage->fetchColumn();
+    
+            //Vérifie si la vie du personnage est inférieure ou égale à zéro
+            return $viePersonnage <= 0;
+        } catch (PDOException $e) {
+            echo "Erreur lors de la vérification de la mort du personnage: " . $e->getMessage();
+            return false; 
+        }
+    }
+
+    public function EstMortMonstre($idMonstre) {
+        try {
+            //Récupére la vie actuelle du monstre depuis la base de données
+            $requeteMonstre = $this->bdd->prepare("SELECT Pv FROM monstre WHERE Id = ?");
+            $requeteMonstre->execute([$idMonstre]);
+            $vieMonstre = $requeteMonstre->fetchColumn();
+    
+            //Vérifie si la vie du monstre est inférieure ou égale à zéro
+            return $vieMonstre <= 0;
+        } catch (PDOException $e) {
+            echo "Erreur lors de la vérification de la mort du monstre : " . $e->getMessage();
+            return false;
+        }
+    }
+    
+    public function tourDeCombat($idPersonnage, $idMonstre, $tour) {
+        //Vérifie si c'est le tour du joueur
+        if ($tour % 2 == 1) {
+            $action = $this->demanderActionJoueur();
+            if ($action == 'attaquer') {
+                $degats = $this->attaquerMonstre($idPersonnage, $idMonstre);
+                echo "Vous avez infligé $degats points de dégâts au monstre.";
+    
+                //Vérifie si le monstre est mort après l'attaque
+                if ($this->EstMortMonstre($idMonstre)) {
+                    echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
+                    return false;
+                }
+            }
+            if ($action == 'defendre') {
+                //Le joueur se défend, réduit les dégâts du monstre
+                $degats = $this->attaquerPersonnage($idMonstre, $idPersonnage, true);
+                echo "Vous vous défendez et avez réduit les dégâts reçus à $degats.";
+                
+                //Vérifie si le monstre est mort après l'attaque
+                if ($this->EstMortMonstre($idMonstre)) {
+                    echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
+                    return false;
+                }
+            } else  {
+            // Tour du monstre
+            $degats = $this->attaquerPersonnage($idMonstre, $idPersonnage, false);
+            echo "Le monstre vous a infligé $degats points de dégâts.";
+    
+            //Vérifie si le personnage est mort après l'attaque du monstre
+            if ($this->EstMortPersonnage($idPersonnage)) {
+                echo "Vous êtes mort. Le combat est terminé.";
+                return false;
+            }
+        }
+    }
 }
 
+    public function trouverMonstreParId($id) {
+        try {
+            //Recherche un monstre en particulier en fonction de l'id
+            $requete = $this->bdd->prepare("SELECT * FROM monstre WHERE id = ?");
+            $requete->execute([$id]);
+            $resultat = $requete->fetch(PDO::FETCH_ASSOC);
 
+            if ($resultat) {
+                return new Monstre($resultat['Nom'], $resultat['Pv'], $resultat['PA'], $resultat['PD'], $resultat['exp_donne'], $resultat['PV_initial']);
+            } else {
+                return null;
+            }
+        } catch (PDOException $e) {
+            echo "Erreur lors de la recherche du personnage par ID: " . $e->getMessage();
+            return null;
+        }
+    }
+    public function monterNiveauPersonnage($idPersonnage) {
+        try {
+            //Récupération des informations sur le personnage en fonction de l'id
+            $requetePersonnage = $this->bdd->prepare("SELECT * FROM personnage WHERE Id = ?");
+            $requetePersonnage->execute([$idPersonnage]);
+            $resultatPersonnage = $requetePersonnage->fetch(PDO::FETCH_ASSOC);
 
+            //Mise à jour du nombre d'étoiles collectées et du niveau du personnage
+            $nouveauNiveau = $resultatPersonnage['niveau'] + 1;
+            // $nouveauNiveau = $resultatNiveau['numero'];
 
+            //Mise à jour dans la base de données
+            $requeteMiseAJour = $this->bdd->prepare("UPDATE personnage SET niveau = ? WHERE Id = ?");
+            $requeteMiseAJour->execute([$nouveauNiveau, $idPersonnage]);
+
+            echo "Personnage mis à jour avec succès !\n";
+            return true;
+        } catch (PDOException $e) {
+            echo "Erreur lors de la mise à jour du personnage : " . $e->getMessage();
+            return false;
+        }
+    }
+}
 
 ?>
