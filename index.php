@@ -1,13 +1,9 @@
 <?php
-//permet d'appeler les fichiers associer à ce projet
 include("config.php");
-include("classes.php");
-include("DAO.php");
+include("Personnage.php");
+include("PersonnageDAO.php");
 
 $DAO = new DAO($connexion);
-
-
-
 
 //l'utilisateur choisi ce qu'il veut faire
 $choix=readline("Que voulez faire ?
