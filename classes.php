@@ -12,8 +12,7 @@ class Personnages{
     private $niveau;
 
     //Initialisation des propriétés d'un objet à l'aide du constructor
-    public function __construct($id,$nom,$PV,$PA,$PD,$exp,$niveau){
-        $this->id=$id;
+    public function __construct($nom,$PV,$PA,$PD,$exp,$niveau){
         $this->nom=$nom;
         $this->PV=$PV;
         $this->PA=$PA;
@@ -82,6 +81,7 @@ class Salle{
     public function getId() {
         return $this->id;
     }
+    
 }
 
 
@@ -93,10 +93,8 @@ class Monstre {
     private $pv;
     private $pa;
     private $pd;
-
     private $exp_donne;
     private $PV_initial;
-
     //Initialisation des propriétés d'un objet à l'aide du constructor
     public function __construct($nom, $pv, $pa,$pd,$exp_donne,$PV_initial) {
         $this->nom = $nom;
@@ -123,6 +121,9 @@ class Monstre {
     }
     public function getExpDonne() {
         return $this->exp_donne;
+    }
+    public function getPVInitial() {
+        return $this->PV_initial;
     }
     public function getId() {
         return $this->id;
@@ -171,7 +172,6 @@ class Arme {
     }
 }
 
-//création d'une classe Monstre
 class Marchand {
     //création de variables en private car on ne les utilise pas en dehors de la classe
     private $id; //Ne sert a rien car id en auto-increment
