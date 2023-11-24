@@ -12,6 +12,8 @@ create table monstre(
     -> exp_donne int(11))
     -> ENGINE InnoDB;
 
+alter table monstre add PV_initial int(11);
+
 create table personnage(
     -> Id int primary key auto_increment,
     -> Nom varchar(100),
@@ -68,3 +70,12 @@ insert into marchand values (5,"Hache", 0, 8,0);
 insert into marchand values (6,"Arc", 0, 4,0);
 insert into marchand values (7,"Grimoire", -2, 10,0);
 insert into marchand values (8,"Casque", 0, 0,8);
+
+insert into arme values (4,"Cape d'invisibilite",1, 0, 0,20);
+insert into arme values (3,"Potion de vie",4, 5, 0,0);
+insert into arme values (2,"Bouclier",2, 0, 0,5);
+insert into arme values (5,"Hache",1, 0, 8,0);
+insert into arme values (6,"Arc",6, 0, 4,0);
+insert into arme values (7,"Grimoire",10, -2, 10,0);
+insert into arme values (8,"Casque",6, 0, 0,8);
+
