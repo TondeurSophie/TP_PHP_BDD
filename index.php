@@ -39,8 +39,8 @@ switch ($choix){
                 echo 'Nom : '.$e['Nom']."\n";
                 echo 'Points de Vie : '.$e['PV']."\n";
                 echo 'Points Attaque : '.$e['PA']."\n";
-                echo 'Points de Défence : '.$e['PD']."\n";
-                echo 'Expérience donne : '.$e['exp']."\n";
+                echo 'Points de Défense : '.$e['PD']."\n";
+                echo 'Expérience : '.$e['exp']."\n";
                 echo 'Niveau : '.$e['niveau']."\n";
                 echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
             }
@@ -59,8 +59,8 @@ switch ($choix){
                 echo 'Nom : '.$e['Nom']."\n";
                 echo 'Points de Vie : '.$e['PV']."\n";
                 echo 'Points Attaque : '.$e['PA']."\n";
-                echo 'Points de Défence : '.$e['PD']."\n";
-                echo 'Expérience donne : '.$e['exp']."\n";
+                echo 'Points de Défense : '.$e['PD']."\n";
+                echo 'Expérience : '.$e['exp']."\n";
                 echo 'Niveau : '.$e['niveau']."\n";
                 echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
             }
@@ -78,8 +78,8 @@ switch ($choix){
                 echo 'Nom : '.$e['Nom']."\n";
                 echo 'Points de Vie : '.$e['PV']."\n";
                 echo 'Points Attaque : '.$e['PA']."\n";
-                echo 'Points de Défence : '.$e['PD']."\n";
-                echo 'Expérience donne : '.$e['exp']."\n";
+                echo 'Points de Défense : '.$e['PD']."\n";
+                echo 'Expérience : '.$e['exp']."\n";
                 echo 'Niveau : '.$e['niveau']."\n";
                 echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
             }
@@ -162,7 +162,7 @@ switch ($choix){
                                 echo 'Nom : '.$e['Nom']."\n";
                                 echo 'Points de Vie : '.$e['Pv']."\n";
                                 echo 'Points Attaque : '.$e['Pa']."\n";
-                                echo 'Points de Défence : '.$e['Pd']."\n";
+                                echo 'Points de Défense : '.$e['Pd']."\n";
                                 echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
                             }
                         }
@@ -178,7 +178,7 @@ switch ($choix){
                                     echo 'Nom : '.$e['Nom']."\n";
                                     echo 'Points de Vie : '.$e['PV']."\n";
                                     echo 'Points Attaque : '.$e['PA']."\n";
-                                    echo 'Points de Défence : '.$e['PD']."\n";
+                                    echo 'Points de Défense : '.$e['PD']."\n";
                                     echo "_ _ _ _ _ _ _ _ _ _ _ _ _ _\n";
                                 }
                             }

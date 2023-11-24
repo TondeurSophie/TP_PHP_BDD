@@ -195,7 +195,7 @@ class DAO{
 
     public function demanderActionJoueur() {
         //Attaque ou se défends
-        echo "Tour du joueur. Choisissez votre action (attaquer/se défendre): ";
+        echo "Tour du joueur. Choisissez votre action (attaquer/defendre): ";
         $action = trim(readline());
         return strtolower($action);
     }
@@ -252,7 +252,7 @@ class DAO{
                 //Vérifie si le monstre est mort après l'attaque
                 if ($this->EstMortMonstre($idMonstre)) {
                     echo "Le monstre est mort. Le combat est terminé, Vous avez gagné.";
-                    $this->Expérience($idPersonnage, $idMonstre);
+                    $this->ajouterObjetVictoire($idPersonnage);
                     return false;
                 }
             } elseif ($action == 'defendre') {
@@ -537,6 +537,37 @@ public function monPerso($personnages,$id){
         return false;
     }
 }
+
+public function ajouterObjetVictoire($idPersonnage) {
+    //Vérifie le nombre d'objets actuels de l'inventaire du personnage
+    $requeteCompteur = $this->bdd->prepare("SELECT COUNT(*) FROM inventaire WHERE idPersonnage = ?");
+    $requeteCompteur->execute([$idPersonnage]);
+    $nombreObjets = $requeteCompteur->fetchColumn();
+
+    //Inventaire initialisé à 10 objets max, si moins de 10 objets, va chercher les caractéristiques de l'objet en question
+    if ($nombreObjets < 10) {
+        //Obtient le nombre total d'objets dans la table 'arme'
+        $nbrobjet = $this->bdd->query("SELECT COUNT(*) FROM arme")->fetchColumn();
+        //Objet aléatoire
+        $idRandom = rand(1, $nbrobjet);
+        //Récupère les caractéristiques de l'objet aléatoire
+        $requeteObjet = $this->bdd->prepare("SELECT Nom, Niveau_requis, Pv, Pa, Pd FROM arme WHERE Id = ?");
+        $requeteObjet->execute([$idRandom]);
+        $arme = $requeteObjet->fetch(PDO::FETCH_ASSOC);
+
+        if ($arme) {
+            //Ajout de l'objet à l'inventaire
+            $requeteAjout = $this->bdd->prepare("INSERT INTO inventaire (Nom, PV, PA, PD, idPersonnage) VALUES (?, ?, ?, ?, ?)");
+            $requeteAjout->execute([$arme['Nom'], $arme['Pv'], $arme['Pa'], $arme['Pd'], $idPersonnage]);
+            echo "Objet ajouté à l'inventaire : " . $arme['Nom'];
+        } else {
+            echo "L'objet n'existe pas dans la table arme.";
+        }
+    } else {
+        echo "L'inventaire est plein. Vous ne pouvez pas ajouter plus d'objets.";
+    }
+}
+
     
 }
 
